@@ -25,25 +25,25 @@ end
 
 ---------------------Xiaomi Wireless----------------------------------------
 -- Each input is a table of {'axes'|'buttons'|'hats', index (lua 1-based), direction (1 | -1)}
-local LeftXAxis = {'axes',1,1} -- move left-right
-local LeftYAxis = {'axes',2,1} -- move forward-backward
-local RightXAxis = {'axes',3,1} --turn left-right
-local RightYAxis = {'axes',6,1} --turn up-down
-local RightTrigger = {'axes',8,1} -- move up
-local LeftTrigger = {'buttons',9, 1} --move down
-local DpadUp = {'hats',1,1} -- increase speed
-local DpadDown = {'hats',1,-1} -- decrease speed
-local DpadRight = {'hats',2,1} -- increase smoothing
-local DpadLeft = {'hats',2,-1} -- decrease smoothing
-local Abutton = {'buttons',1,1} -- pause game
-local Bbutton = {'buttons',2,1} -- hide interface
-local Xbutton = {'buttons',4,1} -- toggle los 
-local Ybutton = {'buttons',5,1} -- print joystick status
-local LShoulderbutton = {'buttons',7,1} -- decrease game speed
-local RShoulderbutton = {'buttons',8,1} -- increase game speed
-local RStickButton = {'buttons',14,1} -- select unit nearest to center of screen? TODO
-local LStickButton = {'buttons',15,1} -- delect all? TODO
-local DeadZone = 0
+-- local LeftXAxis = {'axes',1,1} -- move left-right
+-- local LeftYAxis = {'axes',2,1} -- move forward-backward
+-- local RightXAxis = {'axes',3,1} --turn left-right
+-- local RightYAxis = {'axes',6,1} --turn up-down
+-- local RightTrigger = {'axes',8,1} -- move up
+-- local LeftTrigger = {'buttons',9, 1} --move down
+-- local DpadUp = {'hats',1,1} -- increase speed
+-- local DpadDown = {'hats',1,-1} -- decrease speed
+-- local DpadRight = {'hats',2,1} -- increase smoothing
+-- local DpadLeft = {'hats',2,-1} -- decrease smoothing
+-- local Abutton = {'buttons',1,1} -- pause game
+-- local Bbutton = {'buttons',2,1} -- hide interface
+-- local Xbutton = {'buttons',4,1} -- toggle los 
+-- local Ybutton = {'buttons',5,1} -- print joystick status
+-- local LShoulderbutton = {'buttons',7,1} -- decrease game speed
+-- local RShoulderbutton = {'buttons',8,1} -- increase game speed
+-- local RStickButton = {'buttons',14,1} -- select unit nearest to center of screen? TODO
+-- local LStickButton = {'buttons',15,1} -- delect all? TODO
+-- local DeadZone = 0
 --[[
 ---------------------X-Box 360 Controller ----------------------------------------
 -- Each input is a table of {'axes'|'buttons'|'hats', index (lua 1-based), direction (1 | -1)}
@@ -68,8 +68,7 @@ local LStickButton = {'buttons',9,1} -- delect all? TODO
 local DeadZone = 0.05
 ]]--
 
---[[
----------------------Playstation 4 Controller ---------------------------------------
+--[[--------------------Playstation 4 Controller ---------------------------------------
 -- Each input is a table of {'axes'|'buttons'|'hats', index (lua 1-based), direction (1 | -1)}
 local LeftXAxis = {'axes',1,1} -- move left-right
 local LeftYAxis = {'axes',2,1} -- move forward-backward
@@ -91,7 +90,7 @@ local RStickButton = {'buttons',9,1} -- select unit nearest to center of screen?
 local LStickButton = {'buttons',8,1} -- delect all? TODO
 ]]--
 
---[[
+--
 ----------------------------------- Playstation 3 Controller -----------------------------------------
 ----Combined with ScpToolikit https://www.lifewire.com/how-to-connect-ps3-controller-to-pc-4589297----
 -- Each input is a table of {'axes'|'buttons'|'hats', index (lua 1-based), direction (1 | -1)}
@@ -111,9 +110,11 @@ local Xbutton = {'buttons',3,1} -- square button, toggle los
 local Ybutton = {'buttons',4,1} -- triangle button, print joystick status
 local LShoulderbutton = {'buttons',5,1} -- decrease game speed
 local RShoulderbutton = {'buttons',6,1} -- increase game speed
-local RStickButton = {'buttons',9,1} -- select unit nearest to center of screen? TODO
-local LStickButton = {'buttons',8,1} -- delect all? TODO
-]]--
+local RStickButton = {'buttons',10,1} -- Toggle maximum minimap
+local LStickButton = {'buttons',9,1} -- Toggle defense ranges GL4
+local SelectButton = {'buttons',7,1} -- specfullview
+local StartButton = {'buttons',8,1} -- DOF toggle
+--
 
 ------------- BIND COMMANDS TO BUTTONS DEBOUNCED! -------------------------------
 local buttonCommands = { -- key is button number, value is command like you would type into console without the beginning /
@@ -122,6 +123,10 @@ local buttonCommands = { -- key is button number, value is command like you woul
   [Xbutton[2]] = function() Spring.SendCommands("togglelos") end, 
   [LShoulderbutton[2]] = function() Spring.SendCommands("slowdown") end,
   [RShoulderbutton[2]] = function() Spring.SendCommands("speedup") end,
+  [RStickButton[2]] = function() Spring.SendCommands("MiniMap Maximize") end,
+  [LStickButton[2]] = function() Spring.SendCommands("luaui togglewidget Defense Range GL4") end,
+  [SelectButton[2]] = function() Spring.SendCommands("SpecFullView") end,
+  [StartButton[2]] = function() Spring.SendCommands("option dof") end,
 }
 
 --------------------------------------------------------------------------------
@@ -135,12 +140,12 @@ local port = "51234"
 local client
 local set
 local isConnected = false
-local movemult = 10.0 -- move speed multiplier
+local movemult = 45.0 -- move speed multiplier
 local rotmult = 1.0  -- rotation speed multiplier
 local movechangefactor = 1.01
 local smoothchangefactor = 0.01
 local joystate = {}
-local smoothing = 0.9  --amount of smoothing
+local smoothing = 0.95  --amount of smoothing
 local analogexponent = 1.8 -- amount of analog stick exponentiation
 local debugMode = false
 --------------------------------------------------------------------------------
